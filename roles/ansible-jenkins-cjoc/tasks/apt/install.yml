@@ -1,0 +1,53 @@
+---
+- name: Create Jenkins group
+  group:
+    name: "{{ jenkins_config_group }}"
+    state: present
+
+- name: Create Jenkins user
+  user:
+    name: "{{ jenkins_config_owner }}"
+    group: "{{ jenkins_config_group }}"
+    home: "{{ jenkins_home }}"
+    shell: "/bin/false"
+    state: present
+    
+- name: Grant permission to /data
+  file: dest=/data mode=ugo+rw
+  
+- name: Install apt packages
+  action: apt name={{ item }} state=present
+  with_items: "{{ jenkins_apt_packages }}"
+
+- name: Set default Java version
+  shell: /usr/sbin/update-java-alternatives -s "{{ jenkins_java_version }}"
+  ignore_errors: yes
+
+- name: Add Jenkins key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 38E2F5F39FF90BDA
+    state: present
+
+- name: Add Jenkins repository
+  apt_repository:
+    repo: 'deb http://downloads.cloudbees.com/cjoc/rolling/debian binary/'
+    state: present
+
+- name: Update apt packages
+  become: true
+  apt:
+    update_cache: yes
+    
+- name: Install Jenkins binary package
+  apt:
+    name: "jenkins-oc"
+    force: yes
+    update_cache: yes
+
+- name: Jenkins is running
+  service:
+    name: jenkins-oc
+    state: restarted
+
+- pause: seconds=15

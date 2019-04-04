@@ -1,0 +1,8 @@
+---
+
+- name: Jenkins is stopped
+  service:
+    name: cloudbees-core-cm
+    state: stopped
+
+- pause: seconds=5

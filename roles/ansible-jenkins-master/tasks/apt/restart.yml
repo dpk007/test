@@ -1,0 +1,6 @@
+---
+
+- name: Jenkins is running
+  service:
+    name: cloudbees-core-cm
+    state: restarted

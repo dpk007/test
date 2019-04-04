@@ -1,0 +1,19 @@
+---
+
+- name: Master Playbook
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+
+  vars:
+    bitbucket_server: "10.3.4.2"
+    jenkins_server: "2.121.2.23"
+    sonar_server: "1.22.31.3"
+    nexus_server: "1.234.1.23"
+  
+  tasks:
+    - include: deploy-bitbucket.yml
+    - include: deploy-jenkins-os.yml
+    - include: deploy-sonar.yml
+    - include: deploy-nexus.yml

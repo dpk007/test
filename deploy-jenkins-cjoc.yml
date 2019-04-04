@@ -1,0 +1,24 @@
+---
+
+- name: Install Jenkins 
+  hosts: Cjocserver
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  
+  vars:
+    #jenkins_version: "2.73.1"
+    jenkins_url: "http://127.0.0.1"
+    jenkins_port: "8888"
+    jenkins_install_via: "apt"
+    # Packages which are to be installed on the jenkins instance
+    jenkins_apt_packages: "openjdk-8-jdk"
+
+    # Java version to use. Note that JDK 8 is required for Jenkins
+    # 2.54 or greater.
+    jenkins_java_version: "java-1.8.0-openjdk-amd64"
+  
+  roles:
+    - ansible-jenkins-cjoc

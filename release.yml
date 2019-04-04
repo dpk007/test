@@ -1,0 +1,8 @@
+--- 
+- name: EDP First 
+  vars:
+    nfs_path: /vagrant/provisioner
+
+- include: "deploy-jenkins-open.yml"
+- include: "deploy-sonar.yml"
+- include: "deploy-nexus.yml"

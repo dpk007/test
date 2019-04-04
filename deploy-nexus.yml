@@ -1,0 +1,12 @@
+---
+
+- name: Install Nexus 
+  hosts: nexusserver
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  
+  roles:
+    - ansible-nexus

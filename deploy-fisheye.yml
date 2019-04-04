@@ -1,0 +1,17 @@
+---
+
+- name: Install Crusible 
+  hosts: Crusibleserver
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  
+  vars:
+  
+  roles:
+    - role: ansible-fisheye
+      fisheye_hash_salt: "es8Aegeech9Oot6i"
+      fisheye_pass: "fisheye"
+      fisheye_user: "fisheye"

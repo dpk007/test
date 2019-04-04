@@ -1,0 +1,4 @@
+---
+- name: 'restart nexus'
+  become: true
+  service: name=nexus state=restarted

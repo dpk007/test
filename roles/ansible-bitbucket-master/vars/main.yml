@@ -1,0 +1,7 @@
+---
+bitbucket_dependencies:
+  - perl
+  - git
+
+bitbucket_url: bitbucket-configs
+bitbucket_package: "atlassian-bitbucket-{{ bitbucket_version }}"

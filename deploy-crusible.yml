@@ -1,0 +1,74 @@
+---
+
+- name: Install Crusible 
+  hosts: Crusibleserver
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  
+  tasks:
+    - name: Install add-apt-repostory
+      become: yes
+      apt: name=software-properties-common state=latest
+    
+    - name: Install Unzip
+      become: yes
+      apt: name=unzip state=latest
+    
+    - name: Create Crusible Home Directory
+      file:
+        path: /home/vagrant/crusible_home
+        state: directory
+        mode: ugo+rw
+          
+    - name: Create Crusible Instance Directory
+      file:
+        path: /home/vagrant/crusible_instance/var/log
+        state: directory
+        mode: ugo+rw
+    
+    - name: Add Oracle Java Repository
+      become: yes
+      apt_repository: repo='ppa:webupd8team/java'
+
+    - name: Accept Java 8 License
+      become: yes
+      debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+    - name: Install Oracle Java 8
+      become: yes
+      apt: name={{item}} state=latest
+      with_items:
+        - oracle-java8-installer
+        - ca-certificates
+        - oracle-java8-set-default
+    
+    - name: Unarchive Crusible
+      unarchive:
+        src: tools/crucible-4.6.0.zip
+        dest: /home/vagrant/crusible_home
+
+    - name: Add home path for crusible in environment.
+      lineinfile:
+        path: /etc/environment
+        line: 'FISHEYE_INST="/home/vagrant/crusible_instance"'
+  
+    - name: Copy Configuration File from Home directory to instance
+      become: yes
+      copy:
+        src: /home/vagrant/crusible_home/fecru-4.6.0/config.xml
+        dest: /home/vagrant/crusible_instance/config.xml
+        remote_src: yes
+        owner: vagrant
+        group: vagrant
+        mode: 0644
+        
+    - name: Execute start script
+      command: sh /home/vagrant/crusible_home/fecru-4.6.0/bin/start.sh
+      
+      
+    
+      
+      

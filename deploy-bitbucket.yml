@@ -1,0 +1,11 @@
+---
+
+- name: Install Bitbucket 
+  hosts: bitbucket
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  
+  roles:
+    - role: ansible-bitbucket-master

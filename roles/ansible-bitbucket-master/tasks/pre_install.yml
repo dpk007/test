@@ -1,0 +1,37 @@
+---
+
+- name: Python 
+  apt:
+    name: python-software-properties
+    state: present
+
+- name: Add GIT Repository
+  apt_repository: 
+    repo: "ppa:git-core/ppa"
+    state: present
+    update_cache: yes
+    
+- name: Install GIT 
+  apt:
+    name: git
+    state: latest
+
+- name: Add Java 8 Repository
+  apt_repository: 
+    repo: "ppa:openjdk-r/ppa"
+    state: present
+    update_cache: yes  
+    
+- name: Install JRE 
+  apt:
+    name: openjdk-8-jdk
+    state: present
+    
+- name: Install Systemctl 
+  apt:
+    name: systemd
+    state: present
+    
+
+    
+ 

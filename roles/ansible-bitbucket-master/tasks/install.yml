@@ -1,0 +1,43 @@
+---
+- name: Bitbucket | Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+    install_recommends: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - "{{ bitbucket_dependencies }}"
+
+- name: Bitbucket | Ensure bitbucket group exists
+  group:
+    name: "{{ bitbucket_group }}"
+
+- name: Bitbucket | Ensure bitbucket user exists
+  user:
+    name: "{{ bitbucket_user }}"
+    group: "{{ bitbucket_group }}"
+    shell: /bin/bash
+
+- name: Bitbucket | Ensure main bitbucket root dirs exists
+  file:
+    path: "{{ item }}"
+    owner: "{{ bitbucket_user }}"
+    group: "{{ bitbucket_group }}"
+    mode: 0755
+    state: directory
+  with_items:
+    - "{{ bitbucket_install_dir }}"
+    - "{{ bitbucket_home_dir }}"
+    - "{{ bitbucket_home_dir }}/shared"
+
+- name: Bitbucket | Extract
+  unarchive:
+    src: /vagrant/provisioner/bitbucket-configs/atlassian-bitbucket-5.13.0.tar.gz
+    dest: "{{ bitbucket_install_dir }}"
+    copy: no
+    owner: "{{ bitbucket_user }}"
+    group: "{{ bitbucket_user }}"
+  notify: restart bitbucket
+  tags:
+    - skip_ansible_lint
